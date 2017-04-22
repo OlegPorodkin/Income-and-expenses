@@ -7,12 +7,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-/**
- * Created by OlegPorodkin on 11.04.2017.
- */
-public class MainFrame extends JFrame{
 
-    private JFrame aieFrame;
+public class MainFrame extends JFrame {
+
     private JLabel budgetField;
     private JLabel budgetLabel;
     private JLabel chronologyLabel;
@@ -21,14 +18,15 @@ public class MainFrame extends JFrame{
     private JTable infoTable;
     private JScrollPane infoTableScrollPane;
     private JPanel buttonPanel;
+    CheckInfoTable cit;
 
     private int budget = 0;
 
     public void buildGUI(){
 
         //создание основного окна
-        aieFrame = new JFrame("Income & Expenses");
-        aieFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame aieFrame = new JFrame("Income & Expenses");
+        aieFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         aieFrame.setSize(400,500);
         aieFrame.setLocationRelativeTo(null);
         aieFrame.setLayout(new GridBagLayout());
@@ -53,13 +51,21 @@ public class MainFrame extends JFrame{
                 GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL, new Insets(0,0,0,0),
                 0,0));
 
-        CheckInfoTable cit = new CheckInfoTable();
+        cit = new CheckInfoTable();
         infoTable = new JTable(cit);
         infoTableScrollPane = new JScrollPane(infoTable);
         infoTableScrollPane.setPreferredSize(new Dimension(392,600));
         aieFrame.add(infoTableScrollPane,new GridBagConstraints(0,2,2,1,1.0,1.0,
                 GridBagConstraints.CENTER,GridBagConstraints.BOTH, new Insets(0,4,0,4),
                 0,300));
+//        TEST
+//        String []data = new String[4];
+//        data[0]="1";
+//        data[1]="1";
+//        data[2]="1";
+//        data[3]="1";
+//        cit.addDate(data);
+//
 
 //******************************************************************************************************************************
 //******КНОПКИ**********************************
@@ -83,14 +89,17 @@ public class MainFrame extends JFrame{
 
     private class IncomeButtonListener implements ActionListener {
 
-        private JTextField enterIncomeField;
-        private JPanel buttonPanel;
-        private JLabel enterIncomeLabel;
         private JFrame infoFrame;
+        private JPanel buttonPanel;
+        private JPanel infoPanel;
+        private JLabel enterIncomeLabel;
+        private JLabel enterCommitLabel;
         private JButton okButton;
         private JButton cancelButton;
+        private JTextField enterIncomeField;
+        private JTextField commitTextField;
 
-        public void buildIncomeGUI(){
+        private void buildIncomeGUI(){
 
             infoFrame = new JFrame("Доход");
             infoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -99,8 +108,8 @@ public class MainFrame extends JFrame{
             infoFrame.setLocationRelativeTo(null);
             infoFrame.setVisible(true);
 
-
             buttonPanel = new JPanel(new GridLayout(1,2));
+            infoPanel = new JPanel(new GridLayout(4,1));
 
             enterIncomeField =new JTextField("0");
             enterIncomeField.setHorizontalAlignment(JLabel.RIGHT);
@@ -115,10 +124,15 @@ public class MainFrame extends JFrame{
                 }
             });
 
-            enterIncomeLabel = new JLabel("Введите сумму : ");
+            commitTextField = new JTextField();
 
-            infoFrame.add(enterIncomeField,BorderLayout.CENTER);
-            enterIncomeField.setFont(new Font("Arial",Font.PLAIN,45));
+            enterIncomeLabel = new JLabel("Введите сумму :");
+            enterCommitLabel = new JLabel("Комментарии :");
+
+            infoPanel.add(enterIncomeLabel);
+            infoPanel.add(enterIncomeField);
+            infoPanel.add(enterCommitLabel);
+            infoPanel.add(commitTextField);
 
             okButton = new JButton("OK");
             buttonPanel.add(okButton);
@@ -128,16 +142,23 @@ public class MainFrame extends JFrame{
             buttonPanel.add(cancelButton);
             cancelButton.addActionListener(new CancelButtonListener());
 
-            infoFrame.add(enterIncomeLabel,BorderLayout.NORTH);
+            infoFrame.add(infoPanel,BorderLayout.CENTER);
             infoFrame.add(buttonPanel,BorderLayout.SOUTH);
         }
 
         @Override
         public void actionPerformed(ActionEvent event) {
-            buildIncomeGUI();
+            if (infoFrame == null) {
+                buildIncomeGUI();
+            }else{
+                infoFrame.setVisible(true);
+                enterIncomeField.setText("");
+            }
         }
 
         public class OkButtonListener implements ActionListener{
+
+            String [] str = new String[4];
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -145,7 +166,15 @@ public class MainFrame extends JFrame{
                 int budget = Integer.parseInt(budgetField.getText());
                 int expence = budget + value;
                 budgetField.setText(String.valueOf(expence));
+                str[0] = "1";
+                str[1] = "2";
+                str[2] = enterIncomeField.getText();
+                str[3] = "dfssds";
+                cit.addDate(str);
+                System.out.println(cit.getRowCount());
+                System.out.println(cit.getColumnCount());
                 infoFrame.setVisible(false);
+                infoFrame = null;
             }
         }
 
@@ -154,6 +183,7 @@ public class MainFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 infoFrame.setVisible(false);
+                infoFrame = null;
             }
         }
     }
@@ -161,13 +191,17 @@ public class MainFrame extends JFrame{
     private class ExpensesButtonListener implements ActionListener {
 
         private JFrame infoFrame;
+        private JPanel buttonPanel;
+        private JPanel infoPanel;
+        private JLabel enterExpenceLabel;
+        private JLabel enterCommitLabel;
         private JButton okButton;
         private JButton cancelButton;
-        private JPanel buttonPanel;
         private JTextField enterExpenceField;
-        private JLabel enterExpenceLabel;
+        private JTextField commitTextField;
 
-        public void buildIncomeGUI(){
+
+        private void buildIncomeGUI(){
 
             infoFrame = new JFrame("Расход");
             infoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -176,8 +210,8 @@ public class MainFrame extends JFrame{
             infoFrame.setLocationRelativeTo(null);
             infoFrame.setVisible(true);
 
-
             buttonPanel = new JPanel(new GridLayout(1,2));
+            infoPanel = new JPanel(new GridLayout(4,1));
 
             enterExpenceField =new JTextField("0");
             enterExpenceField.setHorizontalAlignment(JLabel.RIGHT);
@@ -192,10 +226,15 @@ public class MainFrame extends JFrame{
                 }
             });
 
-            infoFrame.add(enterExpenceField,BorderLayout.CENTER);
-            enterExpenceField.setFont(new Font("Arial",Font.PLAIN,45));
+            commitTextField = new JTextField();
 
             enterExpenceLabel = new JLabel("Введите сумму : ");
+            enterCommitLabel = new JLabel("Комментарии :");
+
+            infoPanel.add(enterExpenceLabel);
+            infoPanel.add(enterExpenceField);
+            infoPanel.add(enterCommitLabel);
+            infoPanel.add(commitTextField);
 
             okButton = new JButton("OK");
             buttonPanel.add(okButton);
@@ -205,7 +244,7 @@ public class MainFrame extends JFrame{
             buttonPanel.add(cancelButton);
             cancelButton.addActionListener(new CancelButtonListener());
 
-            infoFrame.add(enterExpenceLabel,BorderLayout.NORTH);
+            infoFrame.add(infoPanel,BorderLayout.NORTH);
             infoFrame.add(buttonPanel,BorderLayout.SOUTH);
         }
 
@@ -217,13 +256,21 @@ public class MainFrame extends JFrame{
         //Кнопка Ок
         public class OkButtonListener implements ActionListener{
 
+            String [] str = new String[4];
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 int value = Integer.parseInt(enterExpenceField.getText());
                 int budget = Integer.parseInt(budgetField.getText());
                 int expence = budget - value;
                 budgetField.setText(String.valueOf(expence));
+                str[0] = "1";
+                str[1] = "2";
+                str[2] = "sdffddf";
+                str[3] = "dfsdfsfs";
+                cit.addDate(str);
                 infoFrame.setVisible(false);
+                infoFrame = null;
             }
         }
 
@@ -232,6 +279,7 @@ public class MainFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 infoFrame.setVisible(false);
+                infoFrame = null;
             }
         }
     }

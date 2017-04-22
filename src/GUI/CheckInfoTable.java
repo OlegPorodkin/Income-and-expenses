@@ -9,7 +9,7 @@ public class CheckInfoTable extends AbstractTableModel {
     private ArrayList<String []> dataArrayList ;
 
     public CheckInfoTable(){
-        dataArrayList = new ArrayList<String []>();
+        dataArrayList = new ArrayList<>();
         for (int i = 0; i < dataArrayList.size(); i++){
             dataArrayList.add(new String[getColumnCount()]);
         }
@@ -43,8 +43,7 @@ public class CheckInfoTable extends AbstractTableModel {
     }
 
     public void addDate(String []row){
-        String [] rowTable = new String[getColumnCount()];
-        rowTable = row;
+        String [] rowTable = row;
         dataArrayList.add(rowTable);
     }
 }
